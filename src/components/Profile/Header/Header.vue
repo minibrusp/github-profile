@@ -1,7 +1,11 @@
 <template>
-  <header class="profile__header">
+  <header :v-if="user" class="profile__header">
     <div class="profile__header__avatar">
-      <Avatar :avatar="user.avatar" :altText="avatarAltText" />
+      <Avatar
+        :v-if="user.avatar_url"
+        :avatar="user.avatar_url"
+        :altText="user.name + '\'s avatar'"
+      />
     </div>
     <dl class="profile__header__stats">
       <Stat item="Followers" :value="user.followers" />
@@ -17,11 +21,6 @@ import Stat from '@/components/Stat/index';
 export default {
   props: ['user'],
   components: { Avatar, Stat },
-  setup(props) {
-    const avatarAltText = props.user.name + "'s avatar";
-
-    return { avatarAltText };
-  },
 };
 </script>
 <style lang="scss">
@@ -49,6 +48,8 @@ export default {
   &__avatar {
     border: 8px solid $midnight_express;
     border-radius: 1rem;
+
+    background-color: $black_russian;
   }
 
   &__stats {

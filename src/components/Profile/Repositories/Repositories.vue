@@ -1,12 +1,15 @@
 <template>
   <section class="repos">
     <div class="repos__header">
-      <h1 class="user">{{ user.name }}</h1>
+      <h1 class="user">
+        {{ user.name ? user.name : user.login?.toUpperCase() }}
+      </h1>
       <p class="caption">{{ user.caption }}</p>
     </div>
-    <div class="repos__container">
+    <div v-if="repos" class="repos__container">
       <Repository v-for="repo in repos" :repo="repo" :key="repo.title" />
     </div>
+    <p v-else>No repository/s available</p>
     <button class="repos__button">View all repositories</button>
   </section>
 </template>
@@ -15,9 +18,6 @@ import Repository from '@/components/Repository/index';
 export default {
   props: ['repos', 'user'],
   components: { Repository },
-  // setup() {
-  //   return { repos };
-  // },
 };
 </script>
 <style lang="scss">

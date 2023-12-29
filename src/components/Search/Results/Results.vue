@@ -1,21 +1,38 @@
 <template>
-  <ul @click="console.log(user)" class="search__results">
+  <ul v-if="user.id" @click="clickHandler" class="search__results">
     <li class="search__results__item">
       <img
         class="search__results__img"
-        :src="user.avatar"
+        :src="user.avatar_url"
         :alt="user.name + '\'s' + ' avatar'"
       />
       <div class="search__results__details">
-        <h2 class="title">{{ user.name }}</h2>
-        <p class="caption">{{ user.caption }}</p>
+        <h2 class="title">
+          {{ user.name ? user.name : user.login?.toUpperCase() }}
+        </h2>
+        <p class="caption">{{ user.bio }}</p>
       </div>
     </li>
   </ul>
 </template>
 <script>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
 export default {
   props: ['user'],
+  setup() {
+    const store = useStore();
+    const foundUser = computed(() => store.state.foundUser);
+
+    const clickHandler = async () => {
+      console.log(foundUser.value);
+      await store.dispatch('init', foundUser.value.login);
+      await store.dispatch('resetFoundUser');
+    };
+
+    return { clickHandler, foundUser };
+  },
 };
 </script>
 <style lang="scss">

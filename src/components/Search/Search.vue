@@ -16,31 +16,36 @@
         @input="onSearch"
       />
     </label>
-    <Results v-if="searchedUser" :user="user" />
+    <Results v-if="searchedUser" :user="foundUser" />
   </form>
 </template>
 <script>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useStore } from 'vuex';
 import debounce from 'lodash/debounce';
 import Results from './Results/index';
-import { mockUser } from '@/mockUser/mockUser';
 
 export default {
   components: { Results },
   setup() {
-    const user = mockUser;
+    const store = useStore();
     const searchedUser = ref(null);
+    const foundUser = computed(() => store.state.foundUser);
 
-    const onSearch = debounce(() => {
+    const onSearch = debounce(async () => {
       if (!searchedUser.value) return;
-      console.log(searchedUser.value);
-    }, 200);
+      try {
+        await store.dispatch('getUser', searchedUser.value);
+      } catch (err) {
+        console.log(err.message);
+      }
+    }, 300);
 
     const resetSearchBox = () => {
       searchedUser.value = '';
     };
 
-    return { user, searchedUser, onSearch, resetSearchBox };
+    return { foundUser, searchedUser, onSearch, resetSearchBox };
   },
 };
 </script>

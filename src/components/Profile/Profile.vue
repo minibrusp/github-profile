@@ -1,21 +1,23 @@
 <template>
   <section class="profile">
     <Header :user="user" />
-    <Repositories :repos="user.repos" :user="user" />
+    <Repositories :repos="repos" :user="user" />
   </section>
 </template>
 <script>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 import Header from '@/components/Profile/Header/index';
 import Repositories from '@/components/Profile/Repositories/index';
-// import ProfileImagePlaceholder from '@/assets/placeholder-profile.png';
-import { mockUser } from '@/mockUser/mockUser.js';
 
 export default {
   components: { Header, Repositories },
   setup() {
-    const user = mockUser;
+    const store = useStore();
+    const user = computed(() => store.state.user);
+    const repos = computed(() => store.state.repos);
 
-    return { user };
+    return { user, repos };
   },
 };
 </script>

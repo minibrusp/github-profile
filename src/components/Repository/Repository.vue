@@ -1,29 +1,35 @@
 <template>
-  <section @click="console.log(repo.title)" class="repository">
-    <h2 class="repository__title">{{ repo.title }}</h2>
+  <section @click="console.log(repo.name)" class="repository">
+    <h2 class="repository__title">{{ repo.name }}</h2>
     <p class="repository__description">{{ repo.description }}</p>
     <ul class="repository__infos">
       <li v-if="repo.license" class="repository__infos__item license">
         <img src="@/assets/Chield_alt.svg" alt="license icon" />
-        <span>{{ repo.license }}</span>
+        <span>{{ repo.license.spdx_id }}</span>
       </li>
       <li v-if="repo.forks" class="repository__infos__item fork">
         <img src="@/assets/Nesting.svg" alt="fork icon" />
-        <span>{{ repo.forks.toLocaleString() }}</span>
+        <span>{{ repo.forks_count.toLocaleString() }}</span>
       </li>
-      <li v-if="repo.stars" class="repository__infos__item star">
+      <li v-if="repo.stargazers_count" class="repository__infos__item star">
         <img src="@/assets/Star.svg" alt="star icon" />
-        <span>{{ repo.stars.toLocaleString() }}</span>
+        <span>{{ repo.stargazers_count.toLocaleString() }}</span>
       </li>
-      <li v-if="repo.lastUpdated" class="repository__infos__item update">
-        <span>{{ repo.lastUpdated }}</span>
+      <li v-if="repo.updated_at" class="repository__infos__item update">
+        <span>{{
+          formatDistanceToNow(new Date(repo.updated_at), { addSuffix: true })
+        }}</span>
       </li>
     </ul>
   </section>
 </template>
 <script>
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 export default {
   props: ['repo'],
+  setup() {
+    return { formatDistanceToNow };
+  },
 };
 </script>
 <style lang="scss">

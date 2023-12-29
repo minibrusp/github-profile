@@ -1,7 +1,7 @@
 <template>
   <div class="stat">
     <dt class="stat__item">{{ item }}</dt>
-    <dd class="stat__value">{{ value }}</dd>
+    <dd class="stat__value">{{ value !== null ? value : 'N / A' }}</dd>
   </div>
 </template>
 <script>
