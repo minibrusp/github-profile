@@ -1,9 +1,11 @@
 <template>
   <div>
-    <img src="@/assets/placeholder-profile.png" alt="github avatar" />
+    <img :src="avatar" :alt="altText" />
   </div>
 </template>
 <script>
-export default {};
+export default {
+  props: ['avatar', 'altText'],
+};
 </script>
 <style lang=""></style>

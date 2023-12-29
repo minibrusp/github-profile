@@ -23,7 +23,10 @@ export default {
   left: 0;
   top: 0;
   padding: 2rem 1rem;
-  aspect-ratio: 16 / 9;
+  /* aspect-ratio: 16 / 9; */
+
+  max-height: 240px;
+  min-height: 240px;
 
   &__hero {
     position: absolute;
@@ -33,8 +36,11 @@ export default {
 
     &__img {
       width: 100%;
-      aspect-ratio: 16 / 9;
+      /* aspect-ratio: 16 / 9; */
       display: block;
+
+      max-height: 240px;
+      min-height: 240px;
     }
   }
 }

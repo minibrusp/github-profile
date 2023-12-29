@@ -1,28 +1,30 @@
 <template>
-  <ul class="search__results display_none">
+  <ul @click="console.log(user)" class="search__results">
     <li class="search__results__item">
       <img
         class="search__results__img"
-        src="@/assets/placeholder-image-dropdown.png"
-        alt="github profile image"
+        :src="user.avatar"
+        :alt="user.name + '\'s' + ' avatar'"
       />
       <div class="search__results__details">
-        <h2 class="title">Github</h2>
-        <p class="caption">How people build software.</p>
+        <h2 class="title">{{ user.name }}</h2>
+        <p class="caption">{{ user.caption }}</p>
       </div>
     </li>
   </ul>
 </template>
 <script>
-export default {};
+export default {
+  props: ['user'],
+};
 </script>
 <style lang="scss">
 @import '@/sass/utils/_mixins.scss';
 @import '@/sass/utils/_colors.scss';
 
-.display_none {
+/* .display_none {
   display: none;
-}
+} */
 
 .search__results {
   margin: 0;
@@ -35,6 +37,11 @@ export default {};
   border-radius: 0.75rem;
 
   background-color: $black_russian;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $paua;
+  }
 
   &__item {
     padding: 0.5rem 0;

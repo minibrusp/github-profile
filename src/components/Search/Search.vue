@@ -1,5 +1,5 @@
 <template>
-  <section class="search" role="search">
+  <form class="search" role="search">
     <label class="search__box">
       <span
         ><img
@@ -12,16 +12,36 @@
         type="search"
         placeholder="username"
         role="searchbox"
+        v-model="searchedUser"
+        @input="onSearch"
       />
     </label>
-    <Results />
-  </section>
+    <Results v-if="searchedUser" :user="user" />
+  </form>
 </template>
 <script>
+import { ref } from 'vue';
+import debounce from 'lodash/debounce';
 import Results from './Results/index';
+import { mockUser } from '@/mockUser/mockUser';
 
 export default {
   components: { Results },
+  setup() {
+    const user = mockUser;
+    const searchedUser = ref(null);
+
+    const onSearch = debounce(() => {
+      if (!searchedUser.value) return;
+      console.log(searchedUser.value);
+    }, 200);
+
+    const resetSearchBox = () => {
+      searchedUser.value = '';
+    };
+
+    return { user, searchedUser, onSearch, resetSearchBox };
+  },
 };
 </script>
 <style lang="scss">
@@ -30,6 +50,8 @@ export default {
 
 .search {
   position: relative;
+  max-width: 484px;
+  margin: 0 auto;
 
   &__box {
     position: relative;
