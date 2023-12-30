@@ -23,9 +23,14 @@
           <span>{{ repo.stargazers_count.toLocaleString() }}</span>
         </li>
         <li v-if="repo.updated_at" class="repository__infos__item update">
-          <span>{{
-            formatDistanceToNow(new Date(repo.updated_at), { addSuffix: true })
-          }}</span>
+          <span
+            >updated
+            {{
+              formatDistanceToNow(new Date(repo.updated_at), {
+                addSuffix: true,
+              }).replace('about', '')
+            }}</span
+          >
         </li>
       </ul>
     </a>
