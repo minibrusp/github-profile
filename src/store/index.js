@@ -5,6 +5,8 @@ const store = createStore({
     user: '',
     foundUser: '',
     repos: [],
+    currentRepoPage: 1,
+    MAX_REPO_PER_PAGE: 4,
   },
   mutations: {
     setFoundUser(state, payload) {
@@ -23,6 +25,12 @@ const store = createStore({
     resetFoundUser(state) {
       state.foundUser = '';
     },
+    resetRepoPage(state) {
+      state.currentRepoPage = 1;
+    },
+    incrementRepoPage(state) {
+      state.currentRepoPage += 1;
+    },
   },
   actions: {
     async init(context, username) {
@@ -37,14 +45,17 @@ const store = createStore({
 
       if (res.length > 0) {
         context.commit('setUser', res[0]);
-        context.commit('setRepos', res[1]);
+        context.commit(
+          'setRepos',
+          res[1].sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+        );
       } else {
         // context.commit('resetFoundUser');
         throw new Error(res.message);
       }
 
       // console.log(res.length > 0);
-      console.log(res[1]);
+      // console.log(res[1]);
     },
 
     async searchUser(context, username) {
@@ -89,6 +100,14 @@ const store = createStore({
 
     async resetFoundUser(context) {
       context.commit('resetFoundUser');
+    },
+
+    async showMoreRepos(context) {
+      context.commit('incrementRepoPage');
+    },
+
+    async resetReposPage(context) {
+      context.commit('resetRepoPage');
     },
   },
 });

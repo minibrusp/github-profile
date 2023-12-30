@@ -6,18 +6,42 @@
       </h1>
       <p class="caption">{{ user.caption }}</p>
     </div>
-    <div v-if="repos" class="repos__container">
+    <div v-if="repos.length" class="repos__container">
       <Repository v-for="repo in repos" :repo="repo" :key="repo.title" />
     </div>
     <p v-else>No repository/s available</p>
-    <button class="repos__button">View all repositories</button>
+    <button
+      v-if="repos.length < storeRepo.length"
+      @click="buttonClickHandler"
+      class="repos__button"
+    >
+      View all repositories
+    </button>
   </section>
 </template>
 <script>
+import { computed, watch } from 'vue';
+import { useStore } from 'vuex';
 import Repository from '@/components/Repository/index';
 export default {
   props: ['repos', 'user'],
   components: { Repository },
+  setup(props) {
+    const store = useStore();
+    const storeRepo = computed(() => store.state.repos);
+    const reposPage = computed(() => store.state.currentRepoPage);
+
+    const buttonClickHandler = () => {
+      store.dispatch('showMoreRepos');
+    };
+
+    watch(reposPage, () => {
+      console.log('store repos length', storeRepo.value.length);
+      console.log('props repos length', props.repos.length);
+    });
+
+    return { buttonClickHandler, storeRepo };
+  },
 };
 </script>
 <style lang="scss">

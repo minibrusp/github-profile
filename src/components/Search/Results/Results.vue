@@ -26,9 +26,10 @@ export default {
     const foundUser = computed(() => store.state.foundUser);
 
     const clickHandler = async () => {
-      console.log(foundUser.value);
+      // console.log(foundUser.value);
       await store.dispatch('init', foundUser.value.login);
       await store.dispatch('resetFoundUser');
+      await store.dispatch('resetReposPage');
     };
 
     return { clickHandler, foundUser };
@@ -38,10 +39,6 @@ export default {
 <style lang="scss">
 @import '@/sass/utils/_mixins.scss';
 @import '@/sass/utils/_colors.scss';
-
-/* .display_none {
-  display: none;
-} */
 
 .search__results {
   margin: 0;

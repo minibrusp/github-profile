@@ -1,5 +1,5 @@
 <template>
-  <form class="search" role="search">
+  <form class="search" role="search" @submit.prevent="">
     <label class="search__box">
       <span
         ><img

@@ -1,7 +1,7 @@
 <template>
   <section class="profile">
     <Header :user="user" />
-    <Repositories :repos="repos" :user="user" />
+    <Repositories :repos="filteredRepos" :user="user" />
   </section>
 </template>
 <script>
@@ -14,10 +14,24 @@ export default {
   components: { Header, Repositories },
   setup() {
     const store = useStore();
+    const MAX_REPO = computed(() => store.state.MAX_REPO_PER_PAGE);
+    const currentRepoPage = computed(() => store.state.currentRepoPage);
+
+    const numRepoToShow = computed(() => {
+      return MAX_REPO.value * currentRepoPage.value;
+    });
     const user = computed(() => store.state.user);
     const repos = computed(() => store.state.repos);
 
-    return { user, repos };
+    const filteredRepos = computed(() => {
+      return repos.value.filter((repo, index) => {
+        if (index + 1 <= numRepoToShow.value) {
+          return repo;
+        }
+      });
+    });
+
+    return { user, repos, filteredRepos };
   },
 };
 </script>
