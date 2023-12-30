@@ -1,26 +1,34 @@
 <template>
   <section @click="console.log(repo.name)" class="repository">
-    <h2 class="repository__title">{{ repo.name }}</h2>
-    <p class="repository__description">{{ repo.description }}</p>
-    <ul class="repository__infos">
-      <li v-if="repo.license" class="repository__infos__item license">
-        <img src="@/assets/Chield_alt.svg" alt="license icon" />
-        <span>{{ repo.license.spdx_id }}</span>
-      </li>
-      <li v-if="repo.forks" class="repository__infos__item fork">
-        <img src="@/assets/Nesting.svg" alt="fork icon" />
-        <span>{{ repo.forks_count.toLocaleString() }}</span>
-      </li>
-      <li v-if="repo.stargazers_count" class="repository__infos__item star">
-        <img src="@/assets/Star.svg" alt="star icon" />
-        <span>{{ repo.stargazers_count.toLocaleString() }}</span>
-      </li>
-      <li v-if="repo.updated_at" class="repository__infos__item update">
-        <span>{{
-          formatDistanceToNow(new Date(repo.updated_at), { addSuffix: true })
-        }}</span>
-      </li>
-    </ul>
+    <a
+      class="repository__link"
+      :href="repo.html_url"
+      target="_blank"
+      title="to github repository url"
+      rel="noreferrer noopener"
+    >
+      <h2 class="repository__title">{{ repo.name }}</h2>
+      <p class="repository__description">{{ repo.description }}</p>
+      <ul class="repository__infos">
+        <li v-if="repo.license" class="repository__infos__item license">
+          <img src="@/assets/Chield_alt.svg" alt="license icon" />
+          <span>{{ repo.license.spdx_id }}</span>
+        </li>
+        <li v-if="repo.forks" class="repository__infos__item fork">
+          <img src="@/assets/Nesting.svg" alt="fork icon" />
+          <span>{{ repo.forks_count.toLocaleString() }}</span>
+        </li>
+        <li v-if="repo.stargazers_count" class="repository__infos__item star">
+          <img src="@/assets/Star.svg" alt="star icon" />
+          <span>{{ repo.stargazers_count.toLocaleString() }}</span>
+        </li>
+        <li v-if="repo.updated_at" class="repository__infos__item update">
+          <span>{{
+            formatDistanceToNow(new Date(repo.updated_at), { addSuffix: true })
+          }}</span>
+        </li>
+      </ul>
+    </a>
   </section>
 </template>
 <script>
@@ -72,6 +80,13 @@ export default {
   &__description,
   &__infos {
     margin: 0;
+  }
+
+  &__link {
+    display: block;
+    width: 100%;
+    text-decoration: none;
+    color: $east_bay;
   }
 
   &__title {

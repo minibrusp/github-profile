@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="avatar">
     <img v-if="avatar" :src="avatar" :alt="altText" />
     <img
       v-else
-      src="@/assets/placeholder-image-dropdown.png"
+      src="@/assets/placeholder-profile.png"
       alt="placeholder image"
     />
   </div>
@@ -13,8 +13,8 @@ export default {
   props: ['avatar', 'altText'],
 };
 </script>
-<style lang="scss" scoped>
-img {
+<style lang="scss">
+.avatar img {
   width: 104px;
   height: 104px;
 }

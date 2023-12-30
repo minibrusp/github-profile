@@ -39,18 +39,32 @@ const store = createStore({
         context.commit('setUser', res[0]);
         context.commit('setRepos', res[1]);
       } else {
-        context.commit('resetFoundUser');
+        // context.commit('resetFoundUser');
         throw new Error(res.message);
       }
 
-      console.log(res.length > 0);
-      console.log(res);
+      // console.log(res.length > 0);
+      console.log(res[1]);
+    },
+
+    async searchUser(context, username) {
+      const res = await fetch(
+        `https://api.github.com/search/users?q=${username}`
+      );
+      const result = await res.json();
+
+      if (res.ok) {
+        context.commit('setFoundUser', result);
+        console.log('user loaded: ');
+      } else {
+        console.log(result);
+        throw new Error(result.message);
+      }
     },
 
     async getUser(context, username) {
       const res = await fetch(`https://api.github.com/users/` + username);
       const result = await res.json();
-
       if (res.ok) {
         context.commit('setFoundUser', result);
         console.log('user loaded: ');
