@@ -117,6 +117,24 @@ const store = createStore({
       }
     },
 
+    async getUser(context, username) {
+      const res = await fetch(`https://api.github.com/users/` + username, {
+        headers: {
+          authorization: {
+            Token: `Bearer ${process.env.VUE_APP_GIT_ACCESS_TOKEN}`,
+          },
+        },
+      });
+      const result = await res.json();
+      if (res.ok) {
+        context.commit('setFoundUser', result);
+        console.log('user loaded: ');
+      } else {
+        console.log(result);
+        throw new Error(result.message);
+      }
+    },
+
     async resetRepos(context) {
       context.commit('resetRepos');
     },
