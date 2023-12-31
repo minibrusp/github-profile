@@ -1,12 +1,14 @@
 <template>
-  <header :v-if="user" class="profile__header">
-    <div class="profile__header__avatar">
-      <Avatar
-        :v-if="user.avatar_url"
-        :avatar="user.avatar_url"
-        :altText="user.name + '\'s avatar'"
-      />
-    </div>
+  <header v-if="user" class="profile__header">
+    <transition name="avatar" mode="out-in">
+      <div class="profile__header__avatar">
+        <Avatar
+          :v-if="user.avatar_url"
+          :avatar="user.avatar_url"
+          :altText="user.name + '\'s avatar'"
+        />
+      </div>
+    </transition>
     <dl class="profile__header__stats">
       <Stat item="Followers" :value="user.followers" />
       <Stat item="Following" :value="user.following" />
@@ -17,10 +19,18 @@
 <script>
 import Avatar from '@/components/Avatar/index';
 import Stat from '@/components/Stat/index';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 
 export default {
   props: ['user'],
   components: { Avatar, Stat },
+  setup() {
+    const store = useStore();
+    const storeError = computed(() => store.state.error);
+
+    return { storeError };
+  },
 };
 </script>
 <style lang="scss">
@@ -73,5 +83,18 @@ export default {
       gap: 1.25rem;
     }
   }
+}
+
+/* avatar transitions  */
+.avatar-enter-from {
+  opacity: 0;
+  /* transform: scale(0.6); */
+}
+.avatar-leave-to {
+  opacity: 0;
+}
+.avatar-enter-active,
+.avatar-leave-active {
+  transition: all 0.3s ease;
 }
 </style>

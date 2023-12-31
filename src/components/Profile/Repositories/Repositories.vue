@@ -1,15 +1,17 @@
 <template>
-  <section class="repos">
+  <section v-if="user" class="repos">
     <div class="repos__header">
       <h1 class="user">
         {{ user.name ? user.name : user.login?.toUpperCase() }}
       </h1>
       <p class="caption">{{ user.caption }}</p>
     </div>
+
     <div v-if="repos.length" class="repos__container">
       <Repository v-for="repo in repos" :repo="repo" :key="repo.title" />
     </div>
-    <p v-else>No repository/s available</p>
+    <p v-if="repos.length === 0 && !isLoading">No repository/s available</p>
+    <p v-if="isLoading" class="repos__button">Loading repos</p>
     <button
       v-if="repos.length < storeRepo.length"
       @click="buttonClickHandler"
@@ -17,6 +19,9 @@
     >
       View all repositories
     </button>
+  </section>
+  <section v-if="storeError" class="repos">
+    <p class="repos__error">{{ storeError }}</p>
   </section>
 </template>
 <script>
@@ -30,6 +35,8 @@ export default {
     const store = useStore();
     const storeRepo = computed(() => store.state.repos);
     const reposPage = computed(() => store.state.currentRepoPage);
+    const storeError = computed(() => store.state.error);
+    const isLoading = computed(() => store.state.isLoading);
 
     const buttonClickHandler = () => {
       store.dispatch('showMoreRepos');
@@ -40,7 +47,7 @@ export default {
       console.log('props repos length', props.repos.length);
     });
 
-    return { buttonClickHandler, storeRepo };
+    return { buttonClickHandler, storeRepo, storeError, isLoading };
   },
 };
 </script>
@@ -106,6 +113,10 @@ export default {
     cursor: pointer;
     display: inline-block;
     color: $east_bay;
+  }
+
+  &__error {
+    padding: 5rem;
   }
 }
 </style>

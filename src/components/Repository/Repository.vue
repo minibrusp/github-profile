@@ -1,5 +1,12 @@
 <template>
-  <section @click="console.log(repo.name)" class="repository">
+  <!-- <transition name="repository__transition"> -->
+  <transition
+    appear
+    name="repository"
+    mode="out-in"
+    @click="console.log(repo.name)"
+    class="repository"
+  >
     <a
       class="repository__link"
       :href="repo.html_url"
@@ -34,7 +41,8 @@
         </li>
       </ul>
     </a>
-  </section>
+  </transition>
+  <!-- </transition> -->
 </template>
 <script>
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
@@ -144,5 +152,19 @@ export default {
       }
     }
   }
+}
+
+/* avatar transitions  */
+.repository-enter-from {
+  opacity: 0;
+  /* transform: scale(0.6); */
+}
+.repository-leave-to {
+  opacity: 0;
+}
+
+.repository-enter-active,
+.repository-leave-active {
+  transition: all 0.3s ease;
 }
 </style>

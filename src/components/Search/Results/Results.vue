@@ -1,19 +1,21 @@
 <template>
-  <ul v-if="user.id" @click="clickHandler" class="search__results">
-    <li class="search__results__item">
-      <img
-        class="search__results__img"
-        :src="user.avatar_url"
-        :alt="user.name + '\'s' + ' avatar'"
-      />
-      <div class="search__results__details">
-        <h2 class="title">
-          {{ user.name ? user.name : user.login?.toUpperCase() }}
-        </h2>
-        <p class="caption">{{ user.bio }}</p>
-      </div>
-    </li>
-  </ul>
+  <transition name="result" mode="out-in">
+    <ul v-if="user.id" @click="clickHandler" class="search__results">
+      <li class="search__results__item">
+        <img
+          class="search__results__img"
+          :src="user.avatar_url"
+          :alt="user.name + '\'s' + ' avatar'"
+        />
+        <div class="search__results__details">
+          <h2 class="title">
+            {{ user.name ? user.name : user.login?.toUpperCase() }}
+          </h2>
+          <p class="caption">{{ user.bio }}</p>
+        </div>
+      </li>
+    </ul>
+  </transition>
 </template>
 <script>
 import { computed } from 'vue';
@@ -27,6 +29,7 @@ export default {
 
     const clickHandler = async () => {
       // console.log(foundUser.value);
+      await store.dispatch('resetRepos');
       await store.dispatch('init', foundUser.value.login);
       await store.dispatch('resetFoundUser');
       await store.dispatch('resetReposPage');
@@ -66,6 +69,8 @@ export default {
 
   &__img {
     width: 100%;
+    min-width: 72px;
+    min-height: 72px;
     max-width: 72px;
     max-height: 72px;
     display: block;
@@ -90,5 +95,17 @@ export default {
       color: $east_bay;
     }
   }
+}
+
+/* result transitions  */
+.result-enter-from {
+  opacity: 0;
+}
+.result-leave-to {
+  opacity: 0;
+}
+.result-enter-active,
+.result-leave-active {
+  transition: all 0.3s ease;
 }
 </style>

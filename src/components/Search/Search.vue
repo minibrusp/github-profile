@@ -33,6 +33,7 @@ export default {
     const foundUser = computed(() => store.state.foundUser);
 
     const onSearch = debounce(async () => {
+      await store.dispatch('resetFoundUser');
       if (!searchedUser.value) return;
       try {
         await store.dispatch('getUser', searchedUser.value);

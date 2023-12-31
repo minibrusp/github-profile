@@ -7,6 +7,8 @@ const store = createStore({
     repos: [],
     currentRepoPage: 1,
     MAX_REPO_PER_PAGE: 4,
+    error: '',
+    isLoading: false,
   },
   mutations: {
     setFoundUser(state, payload) {
@@ -22,6 +24,9 @@ const store = createStore({
     setRepos(state, payload) {
       state.repos = payload;
     },
+    resetRepos(state) {
+      state.repos = [];
+    },
     resetFoundUser(state) {
       state.foundUser = '';
     },
@@ -31,36 +36,72 @@ const store = createStore({
     incrementRepoPage(state) {
       state.currentRepoPage += 1;
     },
+
+    resetError(state) {
+      state.error = '';
+    },
+
+    setError(state, payload) {
+      state.error = payload;
+    },
+
+    setIsLoading(state, payload) {
+      state.isLoading = payload;
+    },
   },
   actions: {
     async init(context, username) {
-      const res = await Promise.all([
-        fetch(`https://api.github.com/users/` + username).then((resp) =>
-          resp.json()
-        ),
-        fetch(`https://api.github.com/users/${username}/repos`).then((resp) =>
-          resp.json()
-        ),
-      ]);
+      try {
+        context.commit('resetError');
+        context.commit('setIsLoading', true);
 
-      if (res.length > 0) {
-        context.commit('setUser', res[0]);
-        context.commit(
-          'setRepos',
-          res[1].sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
-        );
-      } else {
-        // context.commit('resetFoundUser');
-        throw new Error(res.message);
+        const res = await Promise.all([
+          fetch(`https://api.github.com/users/` + username, {
+            headers: {
+              authorization: {
+                Token: `bearer ${process.env.VUE_APP_GIT_ACCESS_TOKEN}`,
+              },
+            },
+          }).then((resp) => resp.json()),
+          fetch(`https://api.github.com/users/${username}/repos`, {
+            headers: {
+              authorization: {
+                Token: `bearer ${process.env.VUE_APP_GIT_ACCESS_TOKEN}`,
+              },
+            },
+          }).then((resp) => resp.json()),
+        ]);
+
+        console.log(res);
+
+        if (res.length && !res[1].message) {
+          context.commit('setUser', res[0]);
+          context.commit(
+            'setRepos',
+            res[1].sort(
+              (a, b) => new Date(b.updated_at) - new Date(a.updated_at)
+            )
+          );
+          context.commit('setIsLoading', false);
+        } else {
+          throw new Error(res[1].message);
+        }
+      } catch (error) {
+        context.commit('setError', error.message);
+        context.commit('setIsLoading', false);
       }
-
-      // console.log(res.length > 0);
-      // console.log(res[1]);
     },
 
     async searchUser(context, username) {
       const res = await fetch(
-        `https://api.github.com/search/users?q=${username}`
+        `https://api.github.com/search/users?q=${username}`,
+        {
+          headers: {
+            authorization: {
+              Token: `Bearer ${process.env.VUE_APP_GIT_ACCESS_TOKEN}`,
+            },
+          },
+        }
       );
       const result = await res.json();
 
@@ -74,7 +115,13 @@ const store = createStore({
     },
 
     async getUser(context, username) {
-      const res = await fetch(`https://api.github.com/users/` + username);
+      const res = await fetch(`https://api.github.com/users/` + username, {
+        headers: {
+          authorization: {
+            Token: `Bearer ${process.env.VUE_APP_GIT_ACCESS_TOKEN}`,
+          },
+        },
+      });
       const result = await res.json();
       if (res.ok) {
         context.commit('setFoundUser', result);
@@ -86,7 +133,16 @@ const store = createStore({
     },
 
     async getRepos(context, username) {
-      const res = await fetch(`https://api.github.com/users/${username}/repos`);
+      const res = await fetch(
+        `https://api.github.com/users/${username}/repos`,
+        {
+          headers: {
+            authorization: {
+              Token: `Bearer ${process.env.VUE_APP_GIT_ACCESS_TOKEN}`,
+            },
+          },
+        }
+      );
       const result = await res.json();
 
       if (res.ok) {
@@ -96,6 +152,10 @@ const store = createStore({
         console.log(result);
         throw new Error(result.message);
       }
+    },
+
+    async resetRepos(context) {
+      context.commit('resetRepos');
     },
 
     async resetFoundUser(context) {
@@ -108,6 +168,10 @@ const store = createStore({
 
     async resetReposPage(context) {
       context.commit('resetRepoPage');
+    },
+
+    async setIsLoading(context, bool) {
+      context.commit('setIsLoading', bool);
     },
   },
 });
