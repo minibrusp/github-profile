@@ -22,6 +22,7 @@
   </section>
   <section v-if="storeError" class="repos">
     <p class="repos__error">{{ storeError }}</p>
+    <p>Please come back again after 10 mins later</p>
   </section>
 </template>
 <script>

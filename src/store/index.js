@@ -57,16 +57,18 @@ const store = createStore({
 
         const res = await Promise.all([
           fetch(`https://api.github.com/users/` + username, {
+            method: 'GET',
             headers: {
               authorization: {
-                Token: `bearer ${process.env.VUE_APP_GIT_ACCESS_TOKEN}`,
+                Token: `Bearer ${process.env.VUE_APP_GIT_ACCESS_TOKEN}`,
               },
             },
           }).then((resp) => resp.json()),
           fetch(`https://api.github.com/users/${username}/repos`, {
+            method: 'GET',
             headers: {
               authorization: {
-                Token: `bearer ${process.env.VUE_APP_GIT_ACCESS_TOKEN}`,
+                Token: `Bearer ${process.env.VUE_APP_GIT_ACCESS_TOKEN}`,
               },
             },
           }).then((resp) => resp.json()),
@@ -96,6 +98,7 @@ const store = createStore({
       const res = await fetch(
         `https://api.github.com/search/users?q=${username}`,
         {
+          method: 'GET',
           headers: {
             authorization: {
               Token: `Bearer ${process.env.VUE_APP_GIT_ACCESS_TOKEN}`,
@@ -107,46 +110,6 @@ const store = createStore({
 
       if (res.ok) {
         context.commit('setFoundUser', result);
-        console.log('user loaded: ');
-      } else {
-        console.log(result);
-        throw new Error(result.message);
-      }
-    },
-
-    async getUser(context, username) {
-      const res = await fetch(`https://api.github.com/users/` + username, {
-        headers: {
-          authorization: {
-            Token: `Bearer ${process.env.VUE_APP_GIT_ACCESS_TOKEN}`,
-          },
-        },
-      });
-      const result = await res.json();
-      if (res.ok) {
-        context.commit('setFoundUser', result);
-        console.log('user loaded: ');
-      } else {
-        console.log(result);
-        throw new Error(result.message);
-      }
-    },
-
-    async getRepos(context, username) {
-      const res = await fetch(
-        `https://api.github.com/users/${username}/repos`,
-        {
-          headers: {
-            authorization: {
-              Token: `Bearer ${process.env.VUE_APP_GIT_ACCESS_TOKEN}`,
-            },
-          },
-        }
-      );
-      const result = await res.json();
-
-      if (res.ok) {
-        context.commit('setRepos', result);
         console.log('user loaded: ');
       } else {
         console.log(result);
