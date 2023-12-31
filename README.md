@@ -1,24 +1,22 @@
-# github-profile
+# DevChallenges's Github Profile challenge
 
-## Project setup
-```
-npm install
-```
+![preview](./design/preview.webp)
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Design
 
-### Compiles and minifies for production
-```
-npm run build
-```
+| 640px                         | 1024px                         | 1280                          |
+| ----------------------------- | ------------------------------ | ----------------------------- |
+| ![640px](./design/mobile.jpg) | ![1024px](./design/tablet.jpg) | ![1280](./design/desktop.jpg) |
 
-### Lints and fixes files
-```
-npm run lint
-```
+![640px](./design/dropdown.jpg)
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Built with
+
+- Vue 3 (Composition API)
+- Vuex
+- SASS
+
+## Project Links
+
+- Live Site URL: [here](https://github-profile-beige.vercel.app/)
+- DevChallenges Solution URL: [here](https://devchallenges.io/solution/5051)

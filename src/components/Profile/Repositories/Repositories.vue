@@ -4,7 +4,7 @@
       <h1 class="user">
         {{ user.name ? user.name : user.login?.toUpperCase() }}
       </h1>
-      <p class="caption">{{ user.caption }}</p>
+      <p class="caption">{{ user.bio }}</p>
     </div>
 
     <div v-if="repos.length" class="repos__container">
